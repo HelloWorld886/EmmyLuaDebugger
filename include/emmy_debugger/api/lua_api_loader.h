@@ -237,13 +237,17 @@ extern int LUA_REGISTRYINDEX;
 #define FUNC
 #endif
 
+#define PRINT(FORMAT,...) {FILE* file = fopen("c:/emmy.txt", "a+"); fprintf(file, FORMAT,  ##__VA_ARGS__); fclose(file);}
+
 #define DEF_LUA_API(FN) extern dll_##FN FN
 #define IMP_LUA_API(FN) FUNC dll_##FN FN
-#define LOAD_LUA_API(FN) FN = (dll_##FN) LoadAPI(""#FN""); if (FN == nullptr) return false
+#define LOAD_LUA_API(FN) FN = (dll_##FN) LoadAPI(""#FN""); if (FN == nullptr) { return false; }
+#define LOAD_LUA_API_CPP(FN, SYMBOL) FN = (dll_##FN) LoadAPI(""#SYMBOL""); if (FN == nullptr) { return false; }
 
 #define DEF_LUA_API_E(FN) extern dll_e_##FN e_##FN
 #define IMP_LUA_API_E(FN) FUNC dll_e_##FN e_##FN
 #define LOAD_LUA_API_E(FN) e_##FN = (dll_e_##FN) LoadAPI(""#FN"")
+#define LOAD_LUA_API_E_CPP(FN, SYMBOL) e_##FN = (dll_e_##FN) LoadAPI(""#SYMBOL"")
 
 typedef int (*dll_lua_gettop)(lua_State* L);
 DEF_LUA_API(lua_gettop);

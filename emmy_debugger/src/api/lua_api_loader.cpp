@@ -34,7 +34,11 @@ HMODULE FindLuaModule()
 
 	while (moreModules)
 	{
+#ifndef LUA_COMPILE_AS_CPP
 		if (GetProcAddress(module.hModule, "lua_gettop"))
+#else
+		if (GetProcAddress(module.hModule, "?lua_gettop@@YAHPEAUlua_State@@@Z"))
+#endif
 		{
 			hModule = module.hModule;
 			break;
@@ -50,6 +54,7 @@ FARPROC LoadAPI(const char* name)
 {
 	if (!hModule)
 		hModule = FindLuaModule();
+
 	return GetProcAddress(hModule, name);
 }
 #else
@@ -414,6 +419,7 @@ void lua_insert(lua_State* L, int idx)
 
 extern "C" bool SetupLuaAPI()
 {
+#ifndef LUA_COMPILE_AS_CPP
 	LOAD_LUA_API(lua_gettop);
 	LOAD_LUA_API(lua_settop);
 	LOAD_LUA_API(lua_type);
@@ -483,6 +489,77 @@ extern "C" bool SetupLuaAPI()
 
 	//jit
 	LOAD_LUA_API_E(luaopen_jit);
+#else
+	LOAD_LUA_API_CPP(lua_gettop, ?lua_gettop@@YAHPEAUlua_State@@@Z);
+	LOAD_LUA_API_CPP(lua_settop, ?lua_settop@@YAXPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_type, ?lua_type@@YAHPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_typename, ?lua_typename@@YAPEBDPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_tolstring, ?lua_tolstring@@YAPEBDPEAUlua_State@@HPEA_K@Z);
+	LOAD_LUA_API_CPP(lua_toboolean, ?lua_toboolean@@YAHPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_pushnil, ?lua_pushnil@@YAXPEAUlua_State@@@Z);
+	LOAD_LUA_API_CPP(lua_pushnumber, ?lua_pushnumber@@YAXPEAUlua_State@@N@Z);
+	LOAD_LUA_API_CPP(lua_pushlstring, ?lua_pushlstring@@YAPEBDPEAUlua_State@@PEBD_K@Z);
+	LOAD_LUA_API_CPP(lua_pushstring, ?lua_pushstring@@YAPEBDPEAUlua_State@@PEBD@Z);
+	LOAD_LUA_API_CPP(lua_pushcclosure, ?lua_pushcclosure@@YAXPEAUlua_State@@P6AH0@ZH@Z);
+	LOAD_LUA_API_CPP(lua_pushboolean, ?lua_pushboolean@@YAXPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_pushvalue, ?lua_pushvalue@@YAXPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_getfield, ?lua_getfield@@YAHPEAUlua_State@@HPEBD@Z);
+	LOAD_LUA_API_CPP(lua_next, ?lua_next@@YAHPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_createtable, ?lua_createtable@@YAXPEAUlua_State@@HH@Z);
+	LOAD_LUA_API_CPP(lua_setfield, ?lua_setfield@@YAXPEAUlua_State@@HPEBD@Z);
+	LOAD_LUA_API_CPP(lua_setmetatable, ?lua_setmetatable@@YAHPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_getstack, ?lua_getstack@@YAHPEAUlua_State@@HPEAUlua_Debug@@@Z);
+	LOAD_LUA_API_CPP(lua_getinfo, ?lua_getinfo@@YAHPEAUlua_State@@PEBDPEAUlua_Debug@@@Z);
+	LOAD_LUA_API_CPP(lua_getlocal, ?lua_getlocal@@YAPEBDPEAUlua_State@@PEBUlua_Debug@@H@Z);
+	LOAD_LUA_API_CPP(lua_getupvalue, ?lua_getupvalue@@YAPEBDPEAUlua_State@@HH@Z);
+	LOAD_LUA_API_CPP(lua_setupvalue, ?lua_setupvalue@@YAPEBDPEAUlua_State@@HH@Z);
+	LOAD_LUA_API_CPP(lua_sethook, ?lua_sethook@@YAXPEAUlua_State@@P6AX0PEAUlua_Debug@@@ZHH@Z);
+	LOAD_LUA_API_CPP(luaL_loadstring, ?luaL_loadstring@@YAHPEAUlua_State@@PEBD@Z);
+	LOAD_LUA_API_CPP(luaL_checklstring, ?luaL_checklstring@@YAPEBDPEAUlua_State@@HPEA_K@Z);
+	LOAD_LUA_API_CPP(luaL_checknumber, ?luaL_checknumber@@YANPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_topointer, ?lua_topointer@@YAPEBXPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_getmetatable, ?lua_getmetatable@@YAHPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_rawget, ?lua_rawget@@YAHPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_rawset, ?lua_rawset@@YAXPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(lua_pushlightuserdata, ?lua_pushlightuserdata@@YAXPEAUlua_State@@PEAX@Z);
+	LOAD_LUA_API_CPP(lua_touserdata, ?lua_touserdata@@YAPEAXPEAUlua_State@@H@Z);
+	LOAD_LUA_API_CPP(luaL_newstate, ?luaL_newstate@@YAPEAUlua_State@@XZ);
+	LOAD_LUA_API_CPP(lua_close, ?lua_close@@YAXPEAUlua_State@@@Z);
+	LOAD_LUA_API_CPP(lua_pushthread, ?lua_pushthread@@YAHPEAUlua_State@@@Z);
+
+	LOAD_LUA_API_CPP(lua_rawseti, ?lua_rawseti@@YAXPEAUlua_State@@H_J@Z);
+	LOAD_LUA_API_CPP(lua_rawgeti, ?lua_rawgeti@@YAHPEAUlua_State@@H_J@Z);
+	//51
+	LOAD_LUA_API_E_CPP(lua_setfenv, lua_setfenv);
+	LOAD_LUA_API_E_CPP(lua_setfenv, lua_tointeger);
+	LOAD_LUA_API_E_CPP(lua_setfenv, lua_tonumber);
+	LOAD_LUA_API_E_CPP(lua_setfenv, lua_call);
+	LOAD_LUA_API_E_CPP(lua_pcall, lua_pcall);
+	//51 & 52
+	LOAD_LUA_API_E_CPP(lua_remove, lua_remove);
+	//52 & 53 & 54
+	LOAD_LUA_API_E_CPP(lua_tointegerx, ?lua_tointegerx@@YA_JPEAUlua_State@@HPEAH@Z);
+	LOAD_LUA_API_E_CPP(lua_tonumberx, ?lua_tonumberx@@YANPEAUlua_State@@HPEAH@Z);
+	LOAD_LUA_API_E_CPP(lua_getglobal, ?lua_getglobal@@YAHPEAUlua_State@@PEBD@Z);
+	LOAD_LUA_API_E_CPP(lua_setglobal, ?lua_setglobal@@YAXPEAUlua_State@@PEBD@Z);
+	LOAD_LUA_API_E_CPP(lua_callk, ?lua_callk@@YAXPEAUlua_State@@HH_JP6AH0H1@Z@Z);
+	LOAD_LUA_API_E_CPP(lua_pcallk, ?lua_pcallk@@YAHPEAUlua_State@@HHH_JP6AH0H1@Z@Z);
+	LOAD_LUA_API_E_CPP(luaL_setfuncs, ?luaL_setfuncs@@YAXPEAUlua_State@@PEBUluaL_Reg@@H@Z);
+	LOAD_LUA_API_E_CPP(lua_absindex, ?lua_absindex@@YAHPEAUlua_State@@H@Z);
+	LOAD_LUA_API_E_CPP(lua_rawgetp, ?lua_rawgetp@@YAHPEAUlua_State@@HPEBX@Z);
+	LOAD_LUA_API_E_CPP(lua_rawsetp, ?lua_rawsetp@@YAXPEAUlua_State@@HPEBX@Z);
+
+
+	// 51 & 52 & 53
+	LOAD_LUA_API_E_CPP(lua_newuserdata, lua_newuserdata);
+	//53
+	LOAD_LUA_API_E_CPP(lua_rotate, ?lua_rotate@@YAXPEAUlua_State@@HH@Z);
+	//54
+	LOAD_LUA_API_E_CPP(lua_newuserdatauv, ?lua_newuserdatauv@@YAPEAXPEAUlua_State@@_KH@Z);
+
+	//jit
+	LOAD_LUA_API_E_CPP(luaopen_jit, luaopen_jit);
+#endif
 
 
 	if (e_lua_newuserdatauv)

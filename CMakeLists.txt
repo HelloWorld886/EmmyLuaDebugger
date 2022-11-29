@@ -40,6 +40,10 @@ if(EMMY_USE_LUA_SOURCE)
     endif()
 endif()
 
+if(LUA_COMPILE_AS_CPP)
+    add_definitions(-DLUA_COMPILE_AS_CPP)
+endif()
+
 add_subdirectory(third-party/libuv-1.29.0)
 add_subdirectory(emmy_debugger)
 add_subdirectory(emmy_core)
