@@ -1,9 +1,9 @@
 ﻿#include "emmy_debugger/api/lua_state.h"
-#include "emmy_debugger/lua_version.h"
+#include "emmy_debugger/api/lua_version.h"
 
 #ifdef EMMY_USE_LUA_SOURCE
 #if defined(EMMY_LUA_JIT)
-#define LuaSwitchDo(__LuaJIT__,__Lua51__, __Lua52__ , __Lua53__, __Lua54__) return __LuaJIT__
+#define LuaSwitchDo(__LuaJIT__,__Lua51__, __Lua52__ , __Lua53__, __Lua54__, __Default__) return __LuaJIT__
 #elif defined(EMMY_LUA_51)
 #define LuaSwitchDo(__LuaJIT__,__Lua51__, __Lua52__ , __Lua53__, __Lua54__,__Default__) return __Lua51__
 #elif defined(EMMY_LUA_52)
